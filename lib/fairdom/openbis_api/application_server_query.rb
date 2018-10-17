@@ -9,7 +9,7 @@ module Fairdom
       end
 
       def root_command_options
-        " -endpoints {%as%:%#{as_endpoint}%\,%sessionToken%:%#{token}%}"
+        " -endpoints '{%as%:%#{as_endpoint}%\,%sessionToken%:%#{token}%}'"
       end
     end
   end

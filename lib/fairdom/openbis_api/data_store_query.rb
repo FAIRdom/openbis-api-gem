@@ -11,7 +11,7 @@ module Fairdom
       end
 
       def root_command_options
-        " -endpoints {%dss%:%#{dss_endpoint}%\,%sessionToken%:%#{token}%}"
+        " -endpoints '{%dss%:%#{dss_endpoint}%\,%sessionToken%:%#{token}%}'"
       end
     end
   end

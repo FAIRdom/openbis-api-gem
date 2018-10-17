@@ -21,7 +21,7 @@ module Fairdom
       private
 
       def execute_command(options)
-        "#{java_root_command} -#{query_object.command_option_key} {#{command_from_options(options)}}"
+        "#{java_root_command} -#{query_object.command_option_key} '{#{command_from_options(options)}}'"
       end
 
       def command_from_options(options)

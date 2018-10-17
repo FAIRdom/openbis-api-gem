@@ -18,7 +18,7 @@ module Fairdom
       end
 
       def root_command_options
-        " -account {%username%:%#{username}%\,%password%:%#{password}%} -endpoints {%as%:%#{as_endpoint}%}"
+        " -account '{%username%:%#{username}%\,%password%:%#{password}%}' -endpoints '{%as%:%#{as_endpoint}%}'"
       end
     end
   end
