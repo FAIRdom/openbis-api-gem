@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = 'https://github.com/fairdom/openseek-api-gem'
   spec.summary     = 'ruby gem to talk to openbis-api java libaries, for use within SEEK4Science'
   spec.description = 'ruby gem to talk to openbis-api java libaries, for use within SEEK4Science'
+  spec.licenses    = ['BSD 3-Clause']
 
   spec.files         = `git ls-files`.split("\n")
   spec.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
