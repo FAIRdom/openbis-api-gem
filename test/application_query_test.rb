@@ -9,13 +9,10 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
   include Fairdom::OpenbisApi
 
   def setup
-    @as_endpoint = 'https://openbis-api.fair-dom.org/openbis/openbis'
     @as_endpoint = 'https://127.0.0.1:8443/openbis/openbis'
-    username = 'apiuser'
-    password = 'apiuser'
     username = 'seek'
     password = 'seek'
-    @token = Authentication.new(username, password, @as_endpoint).login['token']
+    @token = Authentication.new(username, password, @as_endpoint, true).login['token']
 
     @options = { entityType: 'Experiment', queryType: 'PROPERTY', property: 'NAME', propertyValue: 'Low light diurnal' }
   end
@@ -24,11 +21,11 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
     @as_endpoint = 'https://127.0.0.1:8443/openbis/openbis'
     username = 'seek'
     password = 'seek'
-    @token = Authentication.new(username, password, @as_endpoint).login['token']
+    @token = Authentication.new(username, password, @as_endpoint, true).login['token']
   end
 
   def test_query_property
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
     experiments = result['experiments']
     refute experiments.empty?
@@ -36,7 +33,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
   def test_query_for_spaces
     @options = { entityType: 'Space', queryType: 'ATTRIBUTE', attribute: 'PermID', attributeValue: '' }
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
     spaces = result['spaces']
     refute spaces.empty?
@@ -62,14 +59,14 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
   end
 
   def test_query_property_no_result
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     @options[:propertyValue] = 'Some_value'
     result = instance.query(@options)
     assert result.empty?
   end
 
   def test_unrecognized_type
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     invalid_type = 'SomeType'
     @options[:entityType] = 'Some_value'
     assert_raise OpenbisQueryException do
@@ -78,21 +75,21 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
   end
 
   def test_empty_property
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     @options[:property] = ''
     result = instance.query(@options)
     assert result.empty?
   end
 
   def test_any_property
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     @options[:property] = 'any_property'
     result = instance.query(@options)
     assert result.empty?
   end
 
   def test_query_perm_id_attribute
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     @options[:queryType] = 'ATTRIBUTE'
     @options[:attribute] = 'permId'
     @options[:attributeValue] = '20180418141729157-47'
@@ -102,7 +99,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
   end
 
   def test_query_multiple_perm_id_attribute_values
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     @options[:queryType] = 'ATTRIBUTE'
     @options[:attribute] = 'permId'
     @options[:attributeValue] = '20180424181519696-54,20180418141729157-47'
@@ -112,7 +109,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
   end
 
   def test_query_all_permid
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     @options[:queryType] = 'ATTRIBUTE'
     @options[:attribute] = 'PermID'
     @options[:attributeValue] = ''
@@ -122,7 +119,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
   def test_query_for_dataset_gives_rich_metadata
     @options = { entityType: 'DataSet', queryType: 'ATTRIBUTE', attribute: 'PermID', attributeValue: '20180424182903704-59' }
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     #puts result
@@ -145,7 +142,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
     puts 'no such test data'
     return
     @options = { entityType: 'DataSet', queryType: 'ATTRIBUTE', attribute: 'PermID', attributeValue: '20180418150033700-51' }
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     puts result
@@ -171,7 +168,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'DataSet', queryType: 'ALL' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -184,7 +181,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'Sample', queryType: 'ALL' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -197,7 +194,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'Space', queryType: 'ALL' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -210,7 +207,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
     local_setup
     @options = { entityType: 'Experiment', queryType: 'ALL' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     puts result.to_json
@@ -223,7 +220,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
       local_setup
       @options = { entityType: 'ExperimentType', queryType: 'ALL' }
 
-      instance = ApplicationServerQuery.new(@as_endpoint, @token)
+      instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
       result = instance.query(@options)
 
       puts result.to_json
@@ -236,7 +233,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'SampleType', queryType: 'ALL' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -249,7 +246,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'DataSetType', queryType: 'ALL' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -265,7 +262,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'Sample', queryType: 'TYPE', typeCode: 'EXPERIMENTAL_STEP' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -279,7 +276,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'DataSet', queryType: 'TYPE', typeCode: 'RAW_DATA' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -307,7 +304,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
     local_setup
     @options = { entityType: 'ExperimentType', queryType: "ATTRIBUTE", :attribute=>"CODE", :attributeValue=>"DEFAULT_EXPERIMENT" }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     puts result.to_json
@@ -323,7 +320,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
     @options = { entityType: 'Experiment', queryType: 'ATTRIBUTE',
               attribute: 'PermID', attributeValue: '20180424181519696-54'}
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     puts result.to_json
@@ -340,7 +337,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'Experiment', queryType: 'TYPE', typeCode: 'DEFAULT_EXPERIMENT' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     puts result.to_json
@@ -350,7 +347,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'Experiment', queryType: 'TYPE', typeCodes: 'DEFAULT_EXPERIMENT,MATERIALS' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -365,7 +362,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'SampleType', queryType: 'SEMANTIC', predicateAccessionId: 'is_a', descriptorAccessionId: 'assay' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -380,7 +377,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'SampleType', queryType: 'ATTRIBUTE', attribute: 'CODE', attributeValue: 'EXPERIMENTAL_STEP' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -389,7 +386,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'SampleType', queryType: 'ATTRIBUTE', attribute: 'CODE', attributeValue: 'UNKNOWN' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -398,7 +395,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
     @options = { entityType: 'SampleType', queryType: 'ATTRIBUTE', attribute: 'CODE', attributeValue: 'EXPERIMENTAL_STEP,UNKNOWN' }
 
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
     result = instance.query(@options)
 
     # puts result
@@ -409,7 +406,7 @@ class ApplicationServerQueryTest < Test::Unit::TestCase
 
   def test_checking_sample_with_parent_and_children
     local_setup
-    instance = ApplicationServerQuery.new(@as_endpoint, @token)
+    instance = instance = ApplicationServerQuery.new(@as_endpoint, @token, true)
 
     @options[:entityType] = 'Sample'
     @options[:queryType] = 'ATTRIBUTE'

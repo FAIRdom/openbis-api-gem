@@ -15,14 +15,14 @@ class AuthenticationTest < Test::Unit::TestCase
   end
 
   def test_successful_authentication
-    au = Authentication.new(@username, @password, @as_endpoint)
+    au = Authentication.new(@username, @password, @as_endpoint, true)
     session_token = au.login
     assert_not_nil session_token['token']
   end
 
   def test_failed_authentication
     invalid_password = 'blabla'
-    au = Authentication.new(@username, invalid_password, @as_endpoint)
+    au = Authentication.new(@username, invalid_password, @as_endpoint, true)
     assert_raise OpenbisQueryException do
       au.login
     end

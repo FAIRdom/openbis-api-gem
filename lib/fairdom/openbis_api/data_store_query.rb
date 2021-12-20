@@ -10,8 +10,13 @@ module Fairdom
         @dss_endpoint = dss_endpoint
       end
 
+      def initialize(dss_endpoint, token, is_test)
+        super(token, is_test)
+        @dss_endpoint = dss_endpoint
+      end
+
       def root_command_options
-        " -endpoints '{%dss%:%#{dss_endpoint}%\,%sessionToken%:%#{token}%}'"
+        " -endpoints '{%dss%:%#{dss_endpoint}%\,%sessionToken%:%#{token}%,%is_test%:%#{is_test}%}'"
       end
     end
   end
