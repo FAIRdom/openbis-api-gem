@@ -3,7 +3,7 @@ module Fairdom
     class Authentication < OpenbisQuery
       attr_reader :as_endpoint, :username, :password
 
-      def initialize(username, password, as_endpoint, is_test)
+      def initialize(username, password, as_endpoint)
         initialize(username, password, as_endpoint, false)
       end
 
