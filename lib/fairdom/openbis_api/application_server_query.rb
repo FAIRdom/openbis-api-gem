@@ -3,12 +3,7 @@ module Fairdom
     class ApplicationServerQuery < OpenbisQuery
       attr_reader :as_endpoint
 
-      def initialize(as_endpoint, token)
-        super(token)
-        @as_endpoint = as_endpoint
-      end
-
-      def initialize(as_endpoint, token, is_test)
+      def initialize(as_endpoint, token, is_test = false)
         super(token, is_test)
         @as_endpoint = as_endpoint
       end
